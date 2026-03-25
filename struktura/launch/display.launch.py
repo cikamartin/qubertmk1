@@ -1,22 +1,26 @@
 import os
+import subprocess
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.substitutions import Command
-from ament_index_python.packages import get_package_share_directory
+from launch_ros.parameter_descriptions import ParameterValue
+from launch.substitutions import TextSubstitution
 
 
 def generate_launch_description():
-    pkg = get_package_share_directory('qubertmk1_description')
-    xacro_file = os.path.join(pkg, 'urdf', 'qubertmk1.urdf.xacro')
-    rviz_config = os.path.join(pkg, 'rviz', 'qubertmk1.rviz')
+    this_dir = os.path.dirname(os.path.realpath(__file__))
+    pkg_dir = os.path.dirname(this_dir)
+    xacro_file = os.path.join(pkg_dir, 'urdf', 'qubertmk1.urdf.xacro')
 
-    robot_description = Command(['xacro ', xacro_file])
+    # Run xacro in subprocess to handle spaces in path
+    robot_description_xml = subprocess.check_output(
+        ['xacro', xacro_file], text=True
+    )
 
     return LaunchDescription([
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
-            parameters=[{'robot_description': robot_description}],
+            parameters=[{'robot_description': robot_description_xml}],
         ),
         Node(
             package='joint_state_publisher_gui',
@@ -25,6 +29,6 @@ def generate_launch_description():
         Node(
             package='rviz2',
             executable='rviz2',
-            arguments=['-d', rviz_config],
+            arguments=['-d', os.path.join(pkg_dir, 'rviz', 'qubertmk1.rviz')],
         ),
     ])

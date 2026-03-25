@@ -1,3 +1,4 @@
 *.zip
 *.step
 *.STEP
+__pycache__/
