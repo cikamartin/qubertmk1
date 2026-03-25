@@ -11,8 +11,8 @@ def generate_launch_description():
 
     # Run xacro in subprocess to handle spaces in path
     robot_description_xml = subprocess.check_output(
-        ['xacro', xacro_file], text=True
-    )
+        ['xacro', xacro_file]
+    ).decode('utf-8')
 
     return LaunchDescription([
         Node(
