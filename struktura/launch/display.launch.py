@@ -2,8 +2,6 @@ import os
 import subprocess
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
-from launch.substitutions import TextSubstitution
 
 
 def generate_launch_description():
