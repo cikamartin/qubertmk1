@@ -4,9 +4,9 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 
 # Eloquent uses node_executable, Foxy+ uses executable
-import launch_ros
-_ELOQUENT = launch_ros.__version__ < '0.10.0'
-_EXEC_KEY = 'node_executable' if _ELOQUENT else 'executable'
+import inspect
+_node_params = inspect.signature(Node.__init__).parameters
+_EXEC_KEY = 'node_executable' if 'node_executable' in _node_params else 'executable'
 
 
 def generate_launch_description():
